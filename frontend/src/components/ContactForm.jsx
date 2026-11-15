@@ -19,7 +19,7 @@ export default function ContactForm({ peliculaActiva }) {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     ...formData,
-    asunto: `${formData.asunto} - ${peliculaActiva?.titulo || 'General'}`
+   asunto: `${formData.asunto} - ${peliculaActiva?.titulo || 'General'}`
   })
 });
       const data = await response.json();
