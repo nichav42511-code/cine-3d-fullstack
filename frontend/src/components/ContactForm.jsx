@@ -14,14 +14,14 @@ export default function ContactForm({ peliculaActiva }) {
     const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://cine-3d-backend.onrender.com';
 
     try {
-      const response = await fetch(`${API_URL}/api/contacto`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ...formData, 
-          asunto: `${formData.asunto} - ${peliculaActiva?.titulo || 'General'}` 
-        })
-      });
+     const response = await fetch(`${API_URL}/contacto`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    ...formData,
+    asunto: `${formData.asunto} - ${peliculaActiva?.titulo || 'General'}`
+  })
+});
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
 
