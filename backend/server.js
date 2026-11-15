@@ -34,7 +34,7 @@ pool.query(`
 });
 
 // Ruta POST requerida por la rúbrica para el formulario
-app.post('/api/contacto', async (req, res) => {
+app.post('/contacto', async (req, res) => {
   const { nombre, correo, asunto, mensaje } = req.body;
 
   if (!nombre || !correo || !mensaje) {
