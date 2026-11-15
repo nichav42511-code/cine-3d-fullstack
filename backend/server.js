@@ -1,23 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const { Pool } = require('pg');
+require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-// Configuración de la conexión a PostgreSQL (Neon)
-// Render y Neon inyectarán la URL automáticamente a través de process.env.DATABASE_URL
+// Configuración de la conexión a Neon
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false }
 });
 
-// Crear la tabla de contactos automáticamente si no existe al iniciar el servidor
+// Verificación o creación automática de la tabla contactos
 pool.query(`
   CREATE TABLE IF NOT EXISTS contactos (
     id SERIAL PRIMARY KEY,
@@ -28,23 +26,23 @@ pool.query(`
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
 `).then(() => {
-  console.log("📦 Tabla 'contactos' verificada/creada en Neon con éxito.");
+  console.log("🟢 Tabla 'contacto' verificada/creada en Neon con éxito.");
 }).catch(err => {
   console.error("Error al crear la tabla en la base de datos:", err);
 });
 
-// Ruta POST requerida por la rúbrica para el formulario
+// Ruta POST para el formulario
 app.post('/contacto', async (req, res) => {
-  const { nombre, correo, asunto, mensaje } = req.body;
-
-  if (!nombre || !correo || !mensaje) {
-    return res.status(400).json({
-      ok: false,
-      error: 'Faltan campos obligatorios.'
-    });
-  }
-
   try {
+    const { nombre, correo, asunto, mensaje } = req.body;
+
+    if (!nombre || !correo || !mensaje) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Faltan campos obligatorios.'
+      });
+    }
+
     const query = `
       INSERT INTO contactos (nombre, correo, asunto, mensaje)
       VALUES ($1, $2, $3, $4)
