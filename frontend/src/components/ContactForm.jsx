@@ -10,11 +10,17 @@ export default function ContactForm({ peliculaActiva }) {
     e.preventDefault();
     setEstado({ cargando: true, exito: null, error: null });
 
+    // URL dinámica: usa la variable de entorno en producción o localhost por defecto si estás programando local
+    const API_URL = import.meta.env.VITE_BACKEND_URL || 'https://cine-3d-backend.onrender.com';
+
     try {
-      const response = await fetch('http://localhost:3001/api/contacto', {
+      const response = await fetch(`${API_URL}/api/contacto`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, asunto: `${formData.asunto} - ${peliculaActiva.titulo}` })
+        body: JSON.stringify({ 
+          ...formData, 
+          asunto: `${formData.asunto} - ${peliculaActiva?.titulo || 'General'}` 
+        })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
@@ -30,7 +36,7 @@ export default function ContactForm({ peliculaActiva }) {
     <section id="contacto" className="bg-slate-900/60 border-t border-slate-800 py-16 px-6">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold text-white text-center mb-2">Reserva tus Entradas</h2>
-        <p className="text-slate-400 text-center mb-8">Conectado en tiempo real con el servidor Node.js.</p>
+        <p className="text-slate-400 text-center mb-8">Conectado en tiempo real con la base de datos en Neon.</p>
         <form onSubmit={handleSubmit} className="space-y-5 bg-slate-950 p-8 rounded-2xl border border-slate-800">
           <div>
             <label className="block text-sm font-medium text-slate-300 mb-1">Nombre</label>
